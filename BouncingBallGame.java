@@ -59,7 +59,7 @@ public class BouncingBallGame extends JFrame {
         timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!gameOver) {
+                if   (!gameOver) {
                     moveBall();
                     checkCollision();
                     repaint();
@@ -95,22 +95,39 @@ public class BouncingBallGame extends JFrame {
 
             // Check if the ball reached the bottom without being caught
             if (ball.y >= HEIGHT) {
-                gameOver = true;
-                timer.stop();
+                // gameOver =true;
+                // timer.stop();
+                ballSpeedY =+ ballSpeedY;
             }
         }
     }
 
+    // private void checkCollision() {
+    //     for (Point ball : balls) {
+    //         if (ball.x >= paddleX && ball.x <= paddleX + PADDLE_WIDTH && ball.y >= HEIGHT - PADDLE_HEIGHT - BALL_SIZE) {
+    //             ballSpeedY = -ballSpeedY;  // Bounce the ball when caught
+    //             score++;
+    //             balls.remove(ball);
+    //             generateBall();
+    //         }
+    //     }
+    // }
     private void checkCollision() {
+        ArrayList<Point> ballsToRemove = new ArrayList<>();
         for (Point ball : balls) {
-            if (ball.x >= paddleX && ball.x <= paddleX + PADDLE_WIDTH && ball.y >= HEIGHT - PADDLE_HEIGHT - BALL_SIZE) {
-                ballSpeedY = -ballSpeedY;  // Bounce the ball when caught
-                score++;
-                balls.remove(ball);
-                generateBall();
+            if (ball.x + BALL_SIZE >= paddleX && ball.x <= paddleX + PADDLE_WIDTH && ball.y + BALL_SIZE >= HEIGHT - PADDLE_HEIGHT && ball.y <= HEIGHT - PADDLE_HEIGHT) {
+                ballSpeedY = -ballSpeedY; // Reverse the Y direction of the ball
+                score++; // Increment score on each successful catch
+    
+                // Optional: Increase ball speed for added difficulty each time it hits the paddle
+                ballSpeedX += ballSpeedX > 0 ? 1 : -1;
+                ballSpeedY -= 1; // Assuming ballSpeedY is initially negative for upward movement
             }
         }
+    
+
     }
+    
 
     @Override
     public void paint(Graphics g) {
